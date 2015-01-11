@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 29-Dec-2014 19:31:08 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="DAL.Lesmoment" table="lesmoment" catalog="cvo" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="module" class="DAL.Module" fetch="select">
+            <column name="module_id" not-null="true" />
+        </many-to-one>
+        <property name="datum" type="date">
+            <column name="datum" length="10" not-null="true" />
+        </property>
+        <property name="beginuur" type="string">
+            <column name="beginuur" length="10" not-null="true" />
+        </property>
+        <property name="einduur" type="string">
+            <column name="einduur" length="10" not-null="true" />
+        </property>
+        <property name="lokaal" type="string">
+            <column name="lokaal" length="10" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
