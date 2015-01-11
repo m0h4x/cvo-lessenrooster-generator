@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Wim
+ * @author Wim666
  */
 public class ModuleLijstController extends HttpServlet {
 
