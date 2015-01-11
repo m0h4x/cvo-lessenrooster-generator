@@ -18,12 +18,12 @@
     <body>
         <div class="content">
             <h2>Op welke dagen kan je les volgen ?</h1>
-                <form class="form-horizontal" action=" " role="form">
-                    <label class="checkbox"><input type="checkbox" name="chkMaandag" value="1">Maandag</label>
-                    <label class="checkbox"><input type="checkbox" name="chkDinsdag" value="1">Dinsdag</label>
-                    <label class="checkbox"><input type="checkbox" name="chkWoensdag" value="1">Woensdag</label>
-                    <label class="checkbox"><input type="checkbox" name="chkDonderdag" value="1">Donderdag</label>
-                    <label class="checkbox"><input type="checkbox" name="chkVrijdag" value="1">Vrijdag</label>
+                <form class="form-horizontal" action="GenereerRoosterController" role="form">
+                    <label class="checkbox"><input type="checkbox" name="chkWeekdagen" value="Maandag">Maandag</label>
+                    <label class="checkbox"><input type="checkbox" name="chkWeekdagen" value="Dinsdag">Dinsdag</label>
+                    <label class="checkbox"><input type="checkbox" name="chkWeekdagen" value="Woensdag">Woensdag</label>
+                    <label class="checkbox"><input type="checkbox" name="chkWeekdagen" value="Donderdag">Donderdag</label>
+                    <label class="checkbox"><input type="checkbox" name="chkWeekdagen" value="Vrijdag">Vrijdag</label>
                     <% for (Module module : vm.getModules()) {
                     %>            
                     <input type="hidden" name="Modules" value=<%= module.getId() %>>  

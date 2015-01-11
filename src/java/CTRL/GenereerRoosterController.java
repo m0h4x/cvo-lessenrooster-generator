@@ -5,22 +5,23 @@
  */
 package CTRL;
 
+import DAL.Module;
 import SL.ModuleServices;
-import VM.LijstModulesViewModel;
 import java.io.IOException;
-import javax.servlet.RequestDispatcher;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 
 /**
  *
  * @author Wim
  */
-public class ModuleLijstController extends HttpServlet {
+public class GenereerRoosterController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,18 +35,22 @@ public class ModuleLijstController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
+        //Gekozen module ID's ophalen
+        List<String> lstGegekozenModuleIds = new ArrayList<String>();
+        if (request.getParameterValues("Modules") != null) {
+            lstGegekozenModuleIds = Arrays.asList(request.getParameterValues("Modules"));
+        }
+
+        //ID's omzetten naar modules
+        List<Module> lstGekozenModules = new ArrayList<Module>();
+        for (String s : lstGegekozenModuleIds) {
+            Module m = ModuleServices.getModule(Integer.parseInt(s));
+            lstGekozenModules.add(m);
+        }
         
         
-        LijstModulesViewModel vm
-                = new LijstModulesViewModel(
-                        ModuleServices.GetAllModules());
 
-        HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
-
-        RequestDispatcher dispatcher
-                = request.getRequestDispatcher("ModulesTonen.jsp");
-        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
