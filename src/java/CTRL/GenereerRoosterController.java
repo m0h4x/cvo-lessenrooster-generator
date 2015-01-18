@@ -8,7 +8,6 @@ package CTRL;
 import DAL.Lesmoment;
 import DAL.Module;
 import SL.ModuleServices;
-import VM.LijstModulesViewModel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -17,12 +16,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -56,6 +53,18 @@ public class GenereerRoosterController extends HttpServlet {
             lstGekozenModules.add(m);
         }
 
+        //De gekozen modules worden mogelijk op meerdere tijdstippen gegeven, 
+        //de overige modules moeten ook terug aan de lijst worden toegevoegd
+        List<Module> lstGekozenModulesAll = new ArrayList<Module>();
+        for (Module m : lstGekozenModules) {
+            List<Module> lstSoortgelijkeModules = new ArrayList<Module>();
+            lstSoortgelijkeModules = ModuleServices.GetAllModulesMetClassificatie(m.getClassificatie());
+
+            for (Module m2 : lstSoortgelijkeModules) {
+                lstGekozenModulesAll.add(m2);
+            }
+        }
+
         //Gekozen weekdagen ophalen
         List<String> lstGekozenWeekdagen = new ArrayList<String>();
         if (request.getParameterValues("chkWeekdagen") != null) {
@@ -85,10 +94,10 @@ public class GenereerRoosterController extends HttpServlet {
         }
 
         //Per gekozen module kijken of deze nog in aanmerking komt door te vergelijken met de gekozen dagen  
-        List<Module> lstModulesDieWelKunnenWordenGevolgd = new ArrayList<Module>();
-        List<Module> lstModulesDieNietKunnenWordenGevolgd = new ArrayList<Module>();
+        List<Module> lstModulesOkVoorGekozenDagen = new ArrayList<Module>();
+        List<Module> lstModulesNietOkVoorGekozenDagen = new ArrayList<Module>();
 
-        for (Module m : lstGekozenModules) {
+        for (Module m : lstGekozenModulesAll) {
             Set<Lesmoment> lesmomenten = m.getLesmoments();
 
             boolean magWordenToegevoegd = true;
@@ -106,22 +115,93 @@ public class GenereerRoosterController extends HttpServlet {
             }
 
             if (magWordenToegevoegd == true) {
-                lstModulesDieWelKunnenWordenGevolgd.add(m);
+                lstModulesOkVoorGekozenDagen.add(m);
             } else {
-                lstModulesDieNietKunnenWordenGevolgd.add(m);
+                lstModulesNietOkVoorGekozenDagen.add(m);
             }
         }
 
-        LijstModulesViewModel vmLstModulesDieWelKunnenWordenGevolgd = new LijstModulesViewModel(lstModulesDieWelKunnenWordenGevolgd);
-        LijstModulesViewModel vmLstModulesDieNietKunnenWordenGevolgd = new LijstModulesViewModel(lstModulesDieNietKunnenWordenGevolgd);
+        //Vergelijken van dagen en final list samenstellen
+        List<Module> lstModulesFinal = new ArrayList<Module>();
+        List<Lesmoment> lstLesmomenten = new ArrayList<Lesmoment>();
 
-        HttpSession session = request.getSession();
-        session.setAttribute("vmLstModulesDieWelKunnenWordenGevolgd", vmLstModulesDieWelKunnenWordenGevolgd);
-        session.setAttribute("vmLstModulesDieNietKunnenWordenGevolgd", vmLstModulesDieNietKunnenWordenGevolgd);
+        int teller = 0;         
+        for (Module m : lstModulesOkVoorGekozenDagen) {
+            //Eerste module wordt sowieso toegevoegd
+            if (teller == 0) {
+                lstModulesFinal.add(m);
+            }
 
-        RequestDispatcher dispatcher
-                = request.getRequestDispatcher("Resultaat.jsp");
-        dispatcher.forward(request, response);
+            //Zorgen dat er geen 2 dezelfde modules worden toegevoegd
+            boolean soortgelijkeModuleAlToegevoegd = false;            
+            for (Module m2 : lstModulesFinal) {
+                if (m2.getClassificatie() == m.getClassificatie()) {
+                    soortgelijkeModuleAlToegevoegd = true;
+                }
+            }
+
+            if (soortgelijkeModuleAlToegevoegd == false) {
+                //De module mag worden toegevoegd, maar we moeten wel nog nakijken of er geen 
+                //tijdstip conflicten zijn met de andere modules die reeds werden toegevoegd
+                boolean magWordenToegevoegd = true;
+                               
+                Set<Lesmoment> lstModuleLesmomenten = m.getLesmoments();
+                
+                for (Lesmoment l : lstModuleLesmomenten)
+                {
+                    //voor elk moment nakijken in lstModulesFinal of datum nog vrij is
+                    
+                    for (Module m3 : lstModulesFinal)
+                    {
+                        Set<Lesmoment> lstModuleLesmomentenCompare = m3.getLesmoments();
+                        
+                        for (Lesmoment l2 : lstModuleLesmomentenCompare)
+                        {
+                            if (l2.getDatum().compareTo(l.getDatum()) == 0)
+                            {
+                                magWordenToegevoegd = false;
+                            }
+                        }
+                    }                  
+                }           
+                
+                if (magWordenToegevoegd == true)
+                {
+                    lstModulesFinal.add(m);
+                }
+            }
+            teller++;
+        }
+
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet GenereerRoosterController2</title>");
+            out.println("</head>");
+            out.println("<body>");
+
+            for (Module mod : lstModulesFinal) {
+                out.println(mod.getNaam() + " " + mod.getCode() + "</br>");
+            }
+
+            out.println("</body>");
+            out.println("</html>");
+        }
+
+//        LijstModulesViewModel vmLstModulesDieWelKunnenWordenGevolgd = new LijstModulesViewModel(lstModulesOkVoorGekozenDagen);
+//        LijstModulesViewModel vmLstModulesDieNietKunnenWordenGevolgd = new LijstModulesViewModel(lstModulesNietOkVoorGekozenDagen);
+//        LijstModulesViewModel vmLstModulesFinal = new LijstModulesViewModel(lstModulesFinal);
+//
+//        HttpSession session = request.getSession();
+//        session.setAttribute("vmLstModulesDieWelKunnenWordenGevolgd", vmLstModulesDieWelKunnenWordenGevolgd);
+//        session.setAttribute("vmLstModulesDieNietKunnenWordenGevolgd", vmLstModulesDieNietKunnenWordenGevolgd);
+//        session.setAttribute("vmLstModulesFinal", vmLstModulesFinal);
+//        
+//        RequestDispatcher dispatcher
+//                = request.getRequestDispatcher("Resultaat.jsp");
+//        dispatcher.forward(request, response);
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

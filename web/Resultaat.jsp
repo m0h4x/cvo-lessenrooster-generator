@@ -12,6 +12,11 @@
 
 %>
 
+<%    LijstModulesViewModel lstModulesFinal
+            = (LijstModulesViewModel) session.getAttribute("lstModulesFinal");
+
+%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <jsp:include page="TopMenu.html" />
@@ -23,32 +28,43 @@
     <body>
         <div class="content">
             <% if (!vmLstModulesDieNietKunnenWordenGevolgd.getModules().isEmpty()) { %>
-            <h2>Opgelet, onderstaande module(s) werden gekozen, maar bevatten lesmomenten op dagen die je niet hebt geselecteerd. 
+            <h2>Onderstaande modules werden weggefilterd omdat ze niet op de juiste dagen worden gegeven. 
                 Ze worden dus niet gebruikt om een lessenrooster te genereren!</h2>
             <table class="table">
                 <% for (Module module : vmLstModulesDieNietKunnenWordenGevolgd.getModules()) {
                 %>
                 <tr>            
-                    <td width="20%"><%= module.getCode()%></td>
+                    <td width="10%"><%= module.getCode()%></td>
                     <td><%= module.getNaam()%></td>    
                 </tr>
                 <%  }%>
             </table>
             <% }%>
 
-            <h2>Onderstaande modules worden gebruikt om een lessenrooster te genereren.</h2>
+            <h2>Onderstaande modules werden gebruikt om een lessenrooster te genereren.</h2>
             <table class="table">
                 <% for (Module module : vmLstModulesDieWelKunnenWordenGevolgd.getModules()) {
                 %>
-                <tr>            
-                    <td width="20%"><%= module.getCode()%></td>
+                <tr>        
+                    <td width="10%"><%= module.getCode()%></td>
                     <td><%= module.getNaam()%></td>    
                 </tr>
                 <%  }%>
-            </table>
-            
-            
-            
+            </table>  
+            <h2>Resultaat</h2>
+
+
+            <h2>Final</h2>
+            <table class="table">
+                <% for (Module module : lstModulesFinal.getModules()) {
+                %>
+                <tr>        
+                    <td width="10%"><%= module.getCode()%></td>
+                    <td><%= module.getNaam()%></td>    
+                </tr>
+                <%  }%>
+            </table>  
+            <h2>Resultaat</h2>
         </div>
     </body>
 </html>

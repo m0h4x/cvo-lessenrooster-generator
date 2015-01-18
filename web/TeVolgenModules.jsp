@@ -23,6 +23,7 @@
                     %>            
                     <label class="checkbox"><input type="checkbox" name="chkModule" value="<%= module.getId() %>"><%= module.getNaam()%></label>
                         <% }%>             
+                    <button Type="button" onClick="history.go(-1);return true;" class="btn btn-custom-lighten">Vorige</button>  
                     <button type="submit" class="btn btn-custom-lighten">Volgende</button>
                 </form>
         </div>

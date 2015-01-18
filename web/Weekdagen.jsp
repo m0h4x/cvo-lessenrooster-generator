@@ -27,7 +27,8 @@
                     <% for (Module module : vm.getModules()) {
                     %>            
                     <input type="hidden" name="Modules" value=<%= module.getId() %>>  
-                        <% }%>             
+                        <% }%>       
+                    <button Type="button" onClick="history.go(-1);return true;" class="btn btn-custom-lighten">Vorige</button>  
                     <button type="submit" class="btn btn-custom-lighten">Volgende</button>
                 </form>
         </div>

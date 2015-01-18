@@ -5,6 +5,7 @@
  */
 package SL;
 
+import DAL.Classificatie;
 import DAL.NewHibernateUtil;
 import java.util.List;
 import org.hibernate.Query;
@@ -21,6 +22,13 @@ public class ModuleServices {
         Session session
                 = NewHibernateUtil.getSessionFactory().openSession();
         Query q = session.createQuery("from Module");
+        return q.list();
+    }
+
+    public static List<Module> GetAllModulesMetClassificatie(Classificatie c) {
+        Session session
+                = NewHibernateUtil.getSessionFactory().openSession();
+        Query q = session.createQuery("from Module where classificatie.code='"+ c.getCode() + "'");
         return q.list();
     }
 
