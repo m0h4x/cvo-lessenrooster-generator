@@ -8,18 +8,23 @@ package CTRL;
 import DAL.Lesmoment;
 import DAL.Module;
 import SL.ModuleServices;
+import VM.LijstLesmomentenViewModel;
+import VM.LijstModulesViewModel;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -125,7 +130,7 @@ public class GenereerRoosterController extends HttpServlet {
         List<Module> lstModulesFinal = new ArrayList<Module>();
         List<Lesmoment> lstLesmomenten = new ArrayList<Lesmoment>();
 
-        int teller = 0;         
+        int teller = 0;
         for (Module m : lstModulesOkVoorGekozenDagen) {
             //Eerste module wordt sowieso toegevoegd
             if (teller == 0) {
@@ -133,7 +138,7 @@ public class GenereerRoosterController extends HttpServlet {
             }
 
             //Zorgen dat er geen 2 dezelfde modules worden toegevoegd
-            boolean soortgelijkeModuleAlToegevoegd = false;            
+            boolean soortgelijkeModuleAlToegevoegd = false;
             for (Module m2 : lstModulesFinal) {
                 if (m2.getClassificatie() == m.getClassificatie()) {
                     soortgelijkeModuleAlToegevoegd = true;
@@ -144,64 +149,49 @@ public class GenereerRoosterController extends HttpServlet {
                 //De module mag worden toegevoegd, maar we moeten wel nog nakijken of er geen 
                 //tijdstip conflicten zijn met de andere modules die reeds werden toegevoegd
                 boolean magWordenToegevoegd = true;
-                               
+
                 Set<Lesmoment> lstModuleLesmomenten = m.getLesmoments();
-                
-                for (Lesmoment l : lstModuleLesmomenten)
-                {
+
+                for (Lesmoment l : lstModuleLesmomenten) {
                     //voor elk moment nakijken in lstModulesFinal of datum nog vrij is
-                    
-                    for (Module m3 : lstModulesFinal)
-                    {
+
+                    for (Module m3 : lstModulesFinal) {
                         Set<Lesmoment> lstModuleLesmomentenCompare = m3.getLesmoments();
-                        
-                        for (Lesmoment l2 : lstModuleLesmomentenCompare)
-                        {
-                            if (l2.getDatum().compareTo(l.getDatum()) == 0)
-                            {
+
+                        for (Lesmoment l2 : lstModuleLesmomentenCompare) {
+                            if (l2.getDatum().compareTo(l.getDatum()) == 0) {
                                 magWordenToegevoegd = false;
                             }
                         }
-                    }                  
-                }           
-                
-                if (magWordenToegevoegd == true)
-                {
+                    }
+                }
+
+                if (magWordenToegevoegd == true) {
                     lstModulesFinal.add(m);
                 }
             }
             teller++;
         }
 
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet GenereerRoosterController2</title>");
-            out.println("</head>");
-            out.println("<body>");
-
-            for (Module mod : lstModulesFinal) {
-                out.println(mod.getNaam() + " " + mod.getCode() + "</br>");
-            }
-
-            out.println("</body>");
-            out.println("</html>");
+        //Alle lesmomenten moeten ook in een viewmodel komen om de rooster weer te geven
+        List<Lesmoment> lstLesmomentenFinal = new ArrayList<Lesmoment>();
+        for (Module m : lstModulesFinal) {
+            lstLesmomentenFinal.addAll(m.getLesmoments());
         }
+        
+        //Sorteren op datum
+        Collections.sort(lstLesmomentenFinal, (Lesmoment l1, Lesmoment l2) -> l1.getDatum().compareTo(l2.getDatum()));
 
-//        LijstModulesViewModel vmLstModulesDieWelKunnenWordenGevolgd = new LijstModulesViewModel(lstModulesOkVoorGekozenDagen);
-//        LijstModulesViewModel vmLstModulesDieNietKunnenWordenGevolgd = new LijstModulesViewModel(lstModulesNietOkVoorGekozenDagen);
-//        LijstModulesViewModel vmLstModulesFinal = new LijstModulesViewModel(lstModulesFinal);
-//
-//        HttpSession session = request.getSession();
-//        session.setAttribute("vmLstModulesDieWelKunnenWordenGevolgd", vmLstModulesDieWelKunnenWordenGevolgd);
-//        session.setAttribute("vmLstModulesDieNietKunnenWordenGevolgd", vmLstModulesDieNietKunnenWordenGevolgd);
-//        session.setAttribute("vmLstModulesFinal", vmLstModulesFinal);
-//        
-//        RequestDispatcher dispatcher
-//                = request.getRequestDispatcher("Resultaat.jsp");
-//        dispatcher.forward(request, response);
+        LijstModulesViewModel vmLstModulesFinal = new LijstModulesViewModel(lstModulesFinal);
+        LijstLesmomentenViewModel vmLesmomentenFinal = new LijstLesmomentenViewModel(lstLesmomentenFinal);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("vmLstModulesFinal", vmLstModulesFinal);
+        session.setAttribute("vmLesmomentenFinal", vmLesmomentenFinal);
+
+        RequestDispatcher dispatcher
+                = request.getRequestDispatcher("Resultaat.jsp");
+        dispatcher.forward(request, response);
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
