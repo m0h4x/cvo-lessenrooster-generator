@@ -23,18 +23,32 @@
     <body>
         <div class="content">
             <% if (!vmLstModulesDieNietKunnenWordenGevolgd.getModules().isEmpty()) { %>
-            <h2>Opgelet, deze modules werden gekozen, maar bevatten lesmomenten op dagen die je niet hebt geselecteerd. 
+            <h2>Opgelet, onderstaande module(s) werden gekozen, maar bevatten lesmomenten op dagen die je niet hebt geselecteerd. 
                 Ze worden dus niet gebruikt om een lessenrooster te genereren!</h2>
-            <table>
+            <table class="table">
                 <% for (Module module : vmLstModulesDieNietKunnenWordenGevolgd.getModules()) {
                 %>
                 <tr>            
-                    <td><%= module.getCode()%></td>
+                    <td width="20%"><%= module.getCode()%></td>
                     <td><%= module.getNaam()%></td>    
                 </tr>
                 <%  }%>
             </table>
             <% }%>
+
+            <h2>Onderstaande modules worden gebruikt om een lessenrooster te genereren.</h2>
+            <table class="table">
+                <% for (Module module : vmLstModulesDieWelKunnenWordenGevolgd.getModules()) {
+                %>
+                <tr>            
+                    <td width="20%"><%= module.getCode()%></td>
+                    <td><%= module.getNaam()%></td>    
+                </tr>
+                <%  }%>
+            </table>
+            
+            
+            
         </div>
     </body>
 </html>
