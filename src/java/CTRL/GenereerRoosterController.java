@@ -8,6 +8,7 @@ package CTRL;
 import DAL.Lesmoment;
 import DAL.Module;
 import SL.ModuleServices;
+import VM.LijstModulesViewModel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -16,10 +17,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -109,19 +112,16 @@ public class GenereerRoosterController extends HttpServlet {
             }
         }
 
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println(lstModulesDieWelKunnenWordenGevolgd + "<BR>");
-            out.println(lstModulesDieNietKunnenWordenGevolgd + "<BR>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        LijstModulesViewModel vmLstModulesDieWelKunnenWordenGevolgd = new LijstModulesViewModel(lstModulesDieWelKunnenWordenGevolgd);
+        LijstModulesViewModel vmLstModulesDieNietKunnenWordenGevolgd = new LijstModulesViewModel(lstModulesDieNietKunnenWordenGevolgd);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("vmLstModulesDieWelKunnenWordenGevolgd", vmLstModulesDieWelKunnenWordenGevolgd);
+        session.setAttribute("vmLstModulesDieNietKunnenWordenGevolgd", vmLstModulesDieNietKunnenWordenGevolgd);
+
+        RequestDispatcher dispatcher
+                = request.getRequestDispatcher("Resultaat.jsp");
+        dispatcher.forward(request, response);
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
