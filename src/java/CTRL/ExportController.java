@@ -5,11 +5,13 @@
  */
 package CTRL;
 
+import DAL.Lesmoment;
 import VM.LijstLesmomentenViewModel;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,13 +43,11 @@ public class ExportController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-//        HttpSession session = request.getSession();
-//
-//        LijstLesmomentenViewModel vmLesmomentenFinal
-//                = (LijstLesmomentenViewModel) session.getAttribute("vmLesmomentenFinal");
+        HttpSession session = request.getSession();
 
-        
-        
+        LijstLesmomentenViewModel vmLesmomentenFinal
+                = (LijstLesmomentenViewModel) session.getAttribute("vmLesmomentenFinal");
+
         // Create a document and add a page to it
         PDDocument document = new PDDocument();
         PDPage page = new PDPage();
@@ -61,9 +61,70 @@ public class ExportController extends HttpServlet {
 
         // Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
         contentStream.beginText();
-        contentStream.setFont(font, 12);
-        contentStream.moveTextPositionByAmount(100, 700);
-        contentStream.drawString("Hello World");
+        contentStream.setFont(font, 16);
+        contentStream.moveTextPositionByAmount(60, 700);
+
+        // Titel
+        contentStream.drawString("Lessenrooster");
+
+        contentStream.setFont(font, 10);
+        contentStream.moveTextPositionByAmount(0, -20);
+
+        int recordTeller = 0;
+        for (Lesmoment l : vmLesmomentenFinal.getLesmomenten()) {
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(l.getDatum());
+            int dag = c.get(Calendar.DAY_OF_WEEK);
+
+            String strDag = "";
+
+            switch (dag) {
+                case 0:
+                    strDag = "Zondag";
+                    break;
+                case 1:
+                    strDag = "Maandag";
+                    break;
+                case 2:
+                    strDag = "Dinsdag";
+                    break;
+                case 3:
+                    strDag = "Woensdag";
+                    break;
+                case 4:
+                    strDag = "Donderdag";
+                    break;
+                case 5:
+                    strDag = "Vrijdag";
+                    break;
+                case 6:
+                    strDag = "Zaterdag";
+                    break;
+            }
+
+            //Nieuwe page beginnen wanner 25 records werden weggeschreven
+            if (recordTeller == 25) {
+                recordTeller = 0;
+                contentStream.endText();
+                contentStream.close();
+                
+                page = new PDPage();
+                document.addPage(page);
+                contentStream = new PDPageContentStream(document, page);
+                contentStream.beginText();
+                contentStream.setFont(font, 10);
+                contentStream.moveTextPositionByAmount(60, 700);
+            } else {
+                recordTeller++;
+            }
+
+            contentStream.drawString(l.getDatum().toString() + "     " + strDag + "     " + l.getBeginuur()
+                    + "     " + l.getEinduur() + "     " + l.getLokaal() + "     " + l.getModule().getCode()
+                    + "     " + l.getModule().getNaam());
+            contentStream.moveTextPositionByAmount(0, -20);
+        }
+
         contentStream.endText();
 
         // Make sure that the content stream is closed:
@@ -77,18 +138,10 @@ public class ExportController extends HttpServlet {
         }
         document.close();
 
-//        try (PrintWriter out = response.getWriter()) {
-//            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet ExportController</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet ExportController at " + vmLesmomentenFinal.getLesmomenten() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        }
+        //Teruggaan naar resultaat pagina
+        RequestDispatcher dispatcher
+                = request.getRequestDispatcher("Resultaat.jsp");
+        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
