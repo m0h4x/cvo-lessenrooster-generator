@@ -2,8 +2,8 @@
 <%@page import="VM.LijstModulesViewModel"%>
 
 <%
-    LijstModulesViewModel vm
-            = (LijstModulesViewModel) session.getAttribute("ViewModel");
+    LijstModulesViewModel vmGekozenModules
+            = (LijstModulesViewModel) session.getAttribute("vmGekozenModules");
 
 %>
 
@@ -24,7 +24,7 @@
                     <label class="checkbox"><input type="checkbox" name="chkWeekdagen" value="Woensdag">Woensdag</label>
                     <label class="checkbox"><input type="checkbox" name="chkWeekdagen" value="Donderdag">Donderdag</label>
                     <label class="checkbox"><input type="checkbox" name="chkWeekdagen" value="Vrijdag">Vrijdag</label>
-                    <% for (Module module : vm.getModules()) {
+                    <% for (Module module : vmGekozenModules.getModules()) {
                     %>            
                     <input type="hidden" name="Modules" value=<%= module.getId() %>>  
                         <% }%>       

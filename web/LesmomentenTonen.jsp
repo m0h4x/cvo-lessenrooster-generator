@@ -2,8 +2,8 @@
 <%@page import="VM.LijstLesmomentenViewModel"%>
 
 <%
-    LijstLesmomentenViewModel vm
-            = (LijstLesmomentenViewModel) session.getAttribute("ViewModel");
+    LijstLesmomentenViewModel vmLesmomenten
+            = (LijstLesmomentenViewModel) session.getAttribute("vmLesmomenten");
 
 %>
 
@@ -27,7 +27,7 @@
                     <th>Lokaal</th>
                     <th>Aktie</th>
                 </tr>
-                <% for (Lesmoment lesmoment : vm.getLesmomenten()) {
+                <% for (Lesmoment lesmoment : vmLesmomenten.getLesmomenten()) {
                 %>
                 <tr>        
                     <td><%= lesmoment.getDatum()%></td>

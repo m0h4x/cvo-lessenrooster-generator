@@ -44,30 +44,36 @@ public class LesmomentToevoegenController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
-
+        
+        //Module id ophalen, deze is nodig als we lesmomenten willen toevoegen aan een module
         String ModuleId = request.getParameter("ModuleId");
         Module module = ModuleServices.getModule(Integer.parseInt(ModuleId));
-
+        
+        //Datum lesmoment ophalen en parsen
         DateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-
         String datum = request.getParameter("Datum");
         Date date = format.parse(datum);
-
+        
+        //Nieuw lesmoment aanmaken
         Lesmoment lesmoment = new Lesmoment();
         lesmoment.setModule(module);
         lesmoment.setLokaal(request.getParameter("Lokaal"));
         lesmoment.setBeginuur(request.getParameter("Beginuur"));
         lesmoment.setEinduur(request.getParameter("Einduur"));
         lesmoment.setDatum(date);
-
+        
+        //Lesmoment bewaren
         LesmomentServices.Save(lesmoment);
-
-        LijstLesmomentenViewModel vm
+        
+        //Ophalen van alle lesmomenten voor een bepaalde module op basis van Id
+        LijstLesmomentenViewModel vmLesmomenten
                 = new LijstLesmomentenViewModel(
                         LesmomentServices.GetAllLesmomenten(module.getId()));
-
+        
         HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
+        
+        //Lesmomenten + geselecteerde module meesturen met session
+        session.setAttribute("vmLesmomenten", vmLesmomenten);
         session.setAttribute("ModuleId", request.getParameter("id"));
 
         RequestDispatcher dispatcher

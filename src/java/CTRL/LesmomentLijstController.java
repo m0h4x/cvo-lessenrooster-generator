@@ -34,14 +34,18 @@ public class LesmomentLijstController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        LijstLesmomentenViewModel vm
+        //Ophalen van alle lesmomenten voor een bepaalde module op basis van Id
+        LijstLesmomentenViewModel vmLesmomenten
                 = new LijstLesmomentenViewModel(
                         LesmomentServices.GetAllLesmomenten(Integer.parseInt(request.getParameter("id"))));
 
         HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
+        
+        //De nodige informatie meesturen met session
+        session.setAttribute("vmLesmomenten", vmLesmomenten);
         session.setAttribute("ModuleId", request.getParameter("id")); 
-
+        
+        //Aanroepen van de jsp pagigina waarop de lesmomenten worden getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("LesmomentenTonen.jsp");
         dispatcher.forward(request, response);

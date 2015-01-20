@@ -34,15 +34,20 @@ public class ModuleVerwijderenController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
+        //Module verwijderen op basis van Id
         ModuleServices.deleteModule(Integer.parseInt(request.getParameter("id")));
-
-        LijstModulesViewModel vm
+        
+        //Ophalen van alle modules zodat deze kunnen worden weergegeven
+        LijstModulesViewModel vmModuleLijst
                 = new LijstModulesViewModel(
                         ModuleServices.GetAllModules());
 
         HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
-
+        
+        //Modules meesturen met session
+        session.setAttribute("vmModuleLijst", vmModuleLijst);
+        
+        //Aanroepen van de jsp pagina waar de modules op worden getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("ModulesTonen.jsp");
         dispatcher.forward(request, response);

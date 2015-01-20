@@ -35,20 +35,25 @@ public class VoorkennisLijstController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        
+        //Ophalen van de vereiste voorkennis voor een module op basis van Id
         LijstVoorkennisViewModel vmVoorkennis
                 = new LijstVoorkennisViewModel(
                         VoorkennisServices.GetAllModuleVoorkennis(Integer.parseInt(request.getParameter("id"))));
-
+        
+        //Ophalen van alle bestaande classificaties, deze kunnen worden gebruikt bij het toevoegen van een vereiste voorgaande module
         LijstClassificatieViewModel vmClassificatie
                 = new LijstClassificatieViewModel(
                         ClassificatieServices.GetAllClassificaties());
 
         HttpSession session = request.getSession();
+        
+        //De nodige informatie meesturen met session
         session.setAttribute("vmVoorkennis", vmVoorkennis);
         session.setAttribute("vmClassificatie", vmClassificatie);
         session.setAttribute("ModuleId", request.getParameter("id"));
-
+        
+        //Aanroepen van de jsp pagina waar de voorkennis van een bepaalde module wordt getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("VoorkennisTonen.jsp");
         dispatcher.forward(request, response);

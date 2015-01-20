@@ -38,23 +38,30 @@ public class VoorkennisVerwijderenController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
+        //Ophalen modulevoorkennis object op basis van Id + ophalen module object
         Modulevoorkennis modulevoorkennis =  VoorkennisServices.getModuleVoorkennis(Integer.parseInt(request.getParameter("id")));
         Module module = modulevoorkennis.getModule();
 
+        //Verwijderen modulevoorkennis object op basis van id
         VoorkennisServices.deleteModuleVoorkennis(modulevoorkennis.getId());
 
+        //Ophalen van de vereiste voorkennis voor een module op basis van Id
         LijstVoorkennisViewModel vmVoorkennis
                 = new LijstVoorkennisViewModel(
                         VoorkennisServices.GetAllModuleVoorkennis(module.getId()));
 
+        //Ophalen van alle bestaande classificaties, deze kunnen worden gebruikt bij het toevoegen van een vereiste voorgaande module
         LijstClassificatieViewModel vmClassificatie
                 = new LijstClassificatieViewModel(
                         ClassificatieServices.GetAllClassificaties());
 
         HttpSession session = request.getSession();
+        
+        //De nodige informatie meesturen met session
         session.setAttribute("vmVoorkennis", vmVoorkennis);
         session.setAttribute("vmClassificatie", vmClassificatie);
 
+        //Aanroepen van de jsp pagina waar de voorkennis van een bepaalde module wordt getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("VoorkennisTonen.jsp");
         dispatcher.forward(request, response);

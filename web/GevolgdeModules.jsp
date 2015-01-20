@@ -2,8 +2,8 @@
 <%@page import="VM.LijstModulesViewModel"%>
 
 <%
-    LijstModulesViewModel vm
-            = (LijstModulesViewModel) session.getAttribute("ViewModel");
+    LijstModulesViewModel vmModuleLijst
+            = (LijstModulesViewModel) session.getAttribute("vmModuleLijst");
 
 %>
 
@@ -19,7 +19,7 @@
         <div class="content">
             <h2>Kies de reeds gevolgde modules</h1>
                 <form class="form-horizontal" action="TeVolgenModulesController" role="form">
-                    <% for (Module module : vm.getModules()) {
+                    <% for (Module module : vmModuleLijst.getModules()) {
                     %>            
                     <label class="checkbox"><input type="checkbox" name="chkModule" value="<%= module.getClassificatie().getId() %>"><%= module.getNaam()%></label>
                         <% }%>             

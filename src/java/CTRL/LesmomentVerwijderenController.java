@@ -41,12 +41,12 @@ public class LesmomentVerwijderenController extends HttpServlet {
         
         LesmomentServices.deleteLesmoment(lesmoment.getId());
 
-        LijstLesmomentenViewModel vm
+        LijstLesmomentenViewModel vmLesmomenten
                 = new LijstLesmomentenViewModel(
                         LesmomentServices.GetAllLesmomenten(module.getId()));
 
         HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
+        session.setAttribute("vmLesmomenten", vmLesmomenten);
         session.setAttribute("ModuleId", request.getParameter("id"));
 
         RequestDispatcher dispatcher

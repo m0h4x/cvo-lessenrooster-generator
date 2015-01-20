@@ -40,29 +40,39 @@ public class VoorkennisToevoegenController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
+        //Ophalen module id en classificatie id
         Integer classificatieId = Integer.parseInt(request.getParameter("selectlist"));
         Integer moduleId = Integer.parseInt(request.getParameter("ModuleId"));
 
+        //Id's converteren naar module en classificatie objecten
         Module module = ModuleServices.getModule(moduleId);
         Classificatie classificatie = ClassificatieServices.getClassificatie(classificatieId);
-
+        
+        //Aanmaken modulevoorkennis object
         Modulevoorkennis modulevoorkennis = new Modulevoorkennis();
         modulevoorkennis.setModule(module);
         modulevoorkennis.setClassificatie(classificatie);
+        
+        //Bewaren modulevoorkennis object
         VoorkennisServices.Save(modulevoorkennis);
-
+        
+        //Ophalen van de vereiste voorkennis voor een module op basis van Id
         LijstVoorkennisViewModel vmVoorkennis
                 = new LijstVoorkennisViewModel(
                         VoorkennisServices.GetAllModuleVoorkennis(module.getId()));
-
+        
+        //Ophalen van alle bestaande classificaties, deze kunnen worden gebruikt bij het toevoegen van een vereiste voorgaande module
         LijstClassificatieViewModel vmClassificatie
                 = new LijstClassificatieViewModel(
                         ClassificatieServices.GetAllClassificaties());
 
         HttpSession session = request.getSession();
+        
+        //De nodige informatie meesturen met session
         session.setAttribute("vmVoorkennis", vmVoorkennis);
         session.setAttribute("vmClassificatie", vmClassificatie);
 
+        //Aanroepen van de jsp pagina waar de voorkennis van een bepaalde module wordt getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("VoorkennisTonen.jsp");
         dispatcher.forward(request, response);

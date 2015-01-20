@@ -40,14 +40,10 @@ public class TeVolgenModulesController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        LijstModulesViewModel vmUniekeModules
-                = new LijstModulesViewModel(
-                        ModuleServices.GetAllUniqueModules());
+        //Ophalen van alle (distinct) module namen 
+        List<Module> lstModules = ModuleServices.GetAllUniqueModules();
 
-        //Lijst van alle modules ophalen (wel unieke op basis van classificatie zodat bv. programmeren 1 geen 4 keer voorkomt)
-        List<Module> lstModules = vmUniekeModules.getModules();
-
-        //Gevolgde classificatie ID's ophalen
+        //Gevolgde classificatie ID's ophalen om te bepalen welke voorkennis de gebruiker al heeft
         List<String> lstGevolgdeClassificatieIds = new ArrayList<String>();
         if (request.getParameterValues("chkModule") != null) {
             lstGevolgdeClassificatieIds = Arrays.asList(request.getParameterValues("chkModule"));
@@ -81,12 +77,16 @@ public class TeVolgenModulesController extends HttpServlet {
                 }
             }
         }
-
-        LijstModulesViewModel vm = new LijstModulesViewModel(lstTeVolgenModules);
+        
+        //Viewmodel aanmaken voor de modules die in aanmerking komen om te volgen
+        LijstModulesViewModel vmTeVolgenModules = new LijstModulesViewModel(lstTeVolgenModules);
         
         HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
-
+        
+        //Modules meesturen met session
+        session.setAttribute("vmTeVolgenModules", vmTeVolgenModules);
+        
+        //Aanroepen van de jsp pagina waar de modules op worden getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("TeVolgenModules.jsp");
         dispatcher.forward(request, response);

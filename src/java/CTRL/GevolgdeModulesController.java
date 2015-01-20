@@ -34,13 +34,17 @@ public class GevolgdeModulesController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        LijstModulesViewModel vm
+        //Ophalen van alle (distinct) module namen zodat deze kunnen worden weergegeven aan de gebruiker
+        LijstModulesViewModel vmModuleLijst
                 = new LijstModulesViewModel(
                         ModuleServices.GetAllUniqueModules());
 
         HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
+        
+        //Modulenamen meesturen met session
+        session.setAttribute("vmModuleLijst", vmModuleLijst);
 
+        //Aanroepen van de jsp pagina waar de module namen op worden getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("GevolgdeModules.jsp");
         dispatcher.forward(request, response);

@@ -57,8 +57,8 @@ public class GenereerRoosterController extends HttpServlet {
             lstGekozenModules.add(m);
         }
 
-        //De gekozen modules worden mogelijk op meerdere tijdstippen gegeven, 
-        //de overige modules moeten ook terug aan de lijst worden toegevoegd
+        //Eerder werd er gewerkt met unieke module namen, zodat de gebruiker zijn selectie kon maken.
+        //Nu is het weer tijd om met alle modules te gaan werken. (vb. programmeren 1 kan verschillende keren voorkomen)
         List<Module> lstGekozenModulesAll = new ArrayList<Module>();
         for (Module m : lstGekozenModules) {
             List<Module> lstSoortgelijkeModules = new ArrayList<Module>();
@@ -181,13 +181,17 @@ public class GenereerRoosterController extends HttpServlet {
         //Sorteren op datum
         Collections.sort(lstLesmomentenFinal, (Lesmoment l1, Lesmoment l2) -> l1.getDatum().compareTo(l2.getDatum()));
 
+        //Viewmodels aanmaken voor modules die in aamerking komen
         LijstModulesViewModel vmLstModulesFinal = new LijstModulesViewModel(lstModulesFinal);
         LijstLesmomentenViewModel vmLesmomentenFinal = new LijstLesmomentenViewModel(lstLesmomentenFinal);
 
         HttpSession session = request.getSession();
+        
+        //De nodige informatie meesturen met session
         session.setAttribute("vmLstModulesFinal", vmLstModulesFinal);
         session.setAttribute("vmLesmomentenFinal", vmLesmomentenFinal);
 
+        //Aanroepen van de jsp pagina's waar de modules en lessenrooster op worden getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("Resultaat.jsp");
         dispatcher.forward(request, response);

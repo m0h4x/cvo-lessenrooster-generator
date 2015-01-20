@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 /**
  *
  * @author Wim
@@ -33,16 +32,19 @@ public class ModuleLijstController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");        
         
-        
-        LijstModulesViewModel vm
+        //Ophalen van alle modules zodat deze kunnen worden weergegeven
+        LijstModulesViewModel vmModuleLijst
                 = new LijstModulesViewModel(
                         ModuleServices.GetAllModules());
 
         HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
+        
+        //Modules meesturen met session
+        session.setAttribute("vmModuleLijst", vmModuleLijst);
 
+        //Aanroepen van de jsp pagina waar de modules op worden getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("ModulesTonen.jsp");
         dispatcher.forward(request, response);

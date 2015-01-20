@@ -2,8 +2,8 @@
 <%@page import="VM.LijstModulesViewModel"%>
 
 <%
-    LijstModulesViewModel vm
-            = (LijstModulesViewModel) session.getAttribute("ViewModel");
+    LijstModulesViewModel vmTeVolgenModules
+            = (LijstModulesViewModel) session.getAttribute("vmTeVolgenModules");
 
 %>
 
@@ -19,7 +19,7 @@
         <div class="content">
             <h2>Kies de modules die je graag zou willen volgen</h1>
                 <form class="form-horizontal" action="WeekdagenController" role="form">
-                    <% for (Module module : vm.getModules()) {
+                    <% for (Module module : vmTeVolgenModules.getModules()) {
                     %>            
                     <label class="checkbox"><input type="checkbox" name="chkModule" value="<%= module.getId() %>"><%= module.getNaam()%></label>
                         <% }%>             

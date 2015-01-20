@@ -52,11 +52,15 @@ public class WeekdagenController extends HttpServlet {
             lstGekozenModules.add(m);
         }
         
-        LijstModulesViewModel vm = new LijstModulesViewModel(lstGekozenModules);       
+        //Viewmodel aanmaken van de gekozen modules
+        LijstModulesViewModel vmGekozenModules = new LijstModulesViewModel(lstGekozenModules);       
         
-                HttpSession session = request.getSession();
-        session.setAttribute("ViewModel", vm);
+        HttpSession session = request.getSession();
+        
+        //Modules meesturen met session
+        session.setAttribute("vmGekozenModules", vmGekozenModules);
 
+        //Aanroepen van de jsp pagina waar de modules op worden getoond
         RequestDispatcher dispatcher
                 = request.getRequestDispatcher("Weekdagen.jsp");
         dispatcher.forward(request, response);

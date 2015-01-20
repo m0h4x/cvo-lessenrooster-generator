@@ -2,8 +2,8 @@
 <%@page import="VM.LijstModulesViewModel"%>
 
 <%
-    LijstModulesViewModel vm
-            = (LijstModulesViewModel) session.getAttribute("ViewModel");
+    LijstModulesViewModel vmModuleLijst
+            = (LijstModulesViewModel) session.getAttribute("vmModuleLijst");
 
 %>
 
@@ -30,7 +30,7 @@
                     <th>Lesmomenten</th>                     
                     <th>Aktie</th>
                 </tr>
-                <% for (Module module : vm.getModules()) {
+                <% for (Module module : vmModuleLijst.getModules()) {
                 %>
                 <tr>            
                     <td><%= module.getCode()%></td>
