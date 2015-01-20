@@ -60,6 +60,10 @@
         <servlet-name>GenereerRoosterController</servlet-name>
         <servlet-class>CTRL.GenereerRoosterController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ExportController</servlet-name>
+        <servlet-class>CTRL.ExportController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ModuleLijstController</servlet-name>
         <url-pattern>/ModuleLijstController</url-pattern>
@@ -119,6 +123,10 @@
     <servlet-mapping>
         <servlet-name>GenereerRoosterController</servlet-name>
         <url-pattern>/GenereerRoosterController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExportController</servlet-name>
+        <url-pattern>/ExportController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

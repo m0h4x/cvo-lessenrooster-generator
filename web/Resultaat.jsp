@@ -7,12 +7,11 @@
 <%
     LijstModulesViewModel vmLstModulesFinal
             = (LijstModulesViewModel) session.getAttribute("vmLstModulesFinal");
-
 %>
 
-<%    LijstLesmomentenViewModel vmLesmomentenFinal
+<%    
+    LijstLesmomentenViewModel vmLesmomentenFinal
             = (LijstLesmomentenViewModel) session.getAttribute("vmLesmomentenFinal");
-
 %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -52,39 +51,39 @@
                     <td>
                         <%
 
-                                    Calendar c = Calendar.getInstance();
-                                    c.setTime(l.getDatum());
-                                    int dag = c.get(Calendar.DAY_OF_WEEK);
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(l.getDatum());
+                            int dag = c.get(Calendar.DAY_OF_WEEK);
 
-                                    String strDag = "";
+                            String strDag = "";
 
-                                    switch (dag) {
-                                        case 0:
-                                            strDag = "Zondag";
-                                            break;
-                                        case 1:
-                                            strDag = "Maandag";
-                                            break;
-                                        case 2:
-                                            strDag = "Dinsdag";
-                                            break;
-                                        case 3:
-                                            strDag = "Woensdag";
-                                            break;
-                                        case 4:
-                                            strDag = "Donderdag";
-                                            break;
-                                        case 5:
-                                            strDag = "Vrijdag";
-                                            break;
-                                        case 6:
-                                            strDag = "Zaterdag";
-                                            break;
-                                    }
-                                    
-                                    pageContext.setAttribute("strDag", strDag);
+                            switch (dag) {
+                                case 0:
+                                    strDag = "Zondag";
+                                    break;
+                                case 1:
+                                    strDag = "Maandag";
+                                    break;
+                                case 2:
+                                    strDag = "Dinsdag";
+                                    break;
+                                case 3:
+                                    strDag = "Woensdag";
+                                    break;
+                                case 4:
+                                    strDag = "Donderdag";
+                                    break;
+                                case 5:
+                                    strDag = "Vrijdag";
+                                    break;
+                                case 6:
+                                    strDag = "Zaterdag";
+                                    break;
+                            }
+
+                            pageContext.setAttribute("strDag", strDag);
                         %>
-                        <%= pageContext.getAttribute("strDag") %>
+                        <%= pageContext.getAttribute("strDag")%>
                     </td>
                     <td><%= l.getBeginuur()%></td>
                     <td><%= l.getEinduur()%></td>
@@ -96,7 +95,7 @@
                 <% }%>
 
             </table>
-
+            <a href="ExportController" class="btn btn-custom-lighten">Bewaren</a>
         </div>
     </body>
 </html>
