@@ -11,6 +11,18 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script>
+            $(function () {
+                $("#begindatum").datepicker({dateFormat: "dd-mm-yy"}).val();
+                $("#einddatum").datepicker({dateFormat: "dd-mm-yy"}).val();
+            });
+        </script>
+
         <title>CVO Antwerpen - Lessenrooster generator</title>
     </head>
     <body>
@@ -31,13 +43,13 @@
                 <div class="form-group">
                     <label for="Begindatum" class="col-sm-2 control-label">Begindatum</label>
                     <div class="col-sm-10">
-                        <input type="text" name="Begindatum" class="form-control" id="Begindatum" placeholder="dd-mm-yyyy">
+                        <input type="text" name="Begindatum" class="form-control" id="begindatum" placeholder="Begindatum">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="Einddatum" class="col-sm-2 control-label">Einddatum</label>
                     <div class="col-sm-10">
-                        <input type="text" name="Einddatum" class="form-control" id="Einddatum" placeholder="dd-mm-yyyy">
+                        <input type="text" name="Einddatum" class="form-control" id="einddatum" placeholder="Einddatum">
                     </div>
                 </div>
                 <div class="form-group">
@@ -55,3 +67,5 @@
         </div>
     </body>
 </html>
+
+
