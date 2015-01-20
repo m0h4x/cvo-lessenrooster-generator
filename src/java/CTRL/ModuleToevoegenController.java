@@ -11,7 +11,6 @@ import SL.ClassificatieServices;
 import SL.ModuleServices;
 import VM.LijstModulesViewModel;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

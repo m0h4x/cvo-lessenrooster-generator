@@ -6,13 +6,10 @@
 package CTRL;
 
 import SL.ClassificatieServices;
-import SL.ModuleServices;
 import SL.VoorkennisServices;
 import VM.LijstClassificatieViewModel;
-import VM.LijstModulesViewModel;
 import VM.LijstVoorkennisViewModel;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

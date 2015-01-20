@@ -15,8 +15,14 @@
     </head>
     <body>
         <div class="content">
-            <h2>Informatie</h2>
-            <p>De bedoeling van deze toepassing is om het voor de cursisten makkelijker te maken om bij de start van een schooljaar een lessenrooster samen te stellen.</p>
+            <h2>Ter informatie</h2>
+            <p>De bedoeling van deze toepassing is om het voor de cursisten makkelijker 
+                te maken om bij de start van een schooljaar een lessenrooster samen te stellen.</p>
+            <p>Het samenstellen van een lessenrooster gebeurt aan de hand van een aantal parameters die je kan instellen.
+                Zo kan je kiezen welke modules je reeds hebt gevolgd en op welke dagen je beschikbaar bent.</p>
+            <p>Om dit alles mogelijk te maken is het aan een beheerder om ervoor te zorgen dat alle modules correct werden ingegeven.
+                Per module moeten alle lesmomenten worden ingebracht, alsook welke voorgaande modules eerst moeten worden gevolgd.</p>
+            <p>© Wim Aerts 2015</p>
         </div>
     </body>
 </html>
